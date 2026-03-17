@@ -2,7 +2,7 @@
 """Trigger a gift send from a Reachdesk campaign.
 
 Usage:
-    python send_gift.py --campaign-id 123 --sender user@company.com \\
+    python send_gift.py [--project-dir DIR] --campaign-id 123 --sender user@company.com \\
         --first-name Jane --last-name Doe --email jane@example.com \\
         [--company "Acme Corp"] [--street "123 Main St"] [--city Boston] \\
         [--state MA] [--zipcode 02101] [--country US] \\
@@ -12,11 +12,12 @@ Usage:
 
 import argparse
 import json
-from reachdesk import api_request
+from reachdesk import add_project_dir_arg, load_env, api_request
 
 
 def main():
     parser = argparse.ArgumentParser(description="Trigger a Reachdesk campaign send")
+    add_project_dir_arg(parser)
 
     # Required
     parser.add_argument("--campaign-id", type=int, required=True, help="Campaign ID to trigger")
@@ -47,6 +48,7 @@ def main():
     parser.add_argument("--source", help="Trigger source name")
 
     args = parser.parse_args()
+    load_env(args)
 
     recipient = {
         "first_name": args.first_name,

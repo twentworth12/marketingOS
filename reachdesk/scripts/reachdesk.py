@@ -2,8 +2,9 @@
 
 Token lookup order:
 1. REACHDESK_API_TOKEN environment variable
-2. .env file in the current working directory
-3. .env file in common Cowork project mount points
+2. .env file in --project-dir (if provided)
+3. .env file in the current working directory
+4. .env file in common Cowork project mount points (/mnt/*)
 
 Base URL: https://app.reachdesk.com/api/v2
 """
@@ -11,12 +12,34 @@ Base URL: https://app.reachdesk.com/api/v2
 import os
 import sys
 import json
+import argparse
 import urllib.request
 import urllib.error
 import urllib.parse
 from pathlib import Path
 
 BASE_URL = "https://app.reachdesk.com/api/v2"
+
+# Set by load_env() when --project-dir is provided
+_project_dir: Path | None = None
+
+
+def add_project_dir_arg(parser: argparse.ArgumentParser) -> None:
+    """Add the --project-dir argument to any script's parser."""
+    parser.add_argument(
+        "--project-dir",
+        help="Path to the project folder containing the .env file",
+    )
+
+
+def load_env(args: argparse.Namespace) -> None:
+    """Load the token from the .env file in --project-dir if provided."""
+    global _project_dir
+    if getattr(args, "project_dir", None):
+        _project_dir = Path(args.project_dir)
+        token = _load_token_from_env_file(_project_dir / ".env")
+        if token:
+            os.environ["REACHDESK_API_TOKEN"] = token
 
 
 def _load_token_from_env_file(path: Path) -> str | None:
@@ -31,7 +54,7 @@ def _load_token_from_env_file(path: Path) -> str | None:
     return None
 
 
-def _find_env_file() -> str | None:
+def _find_token() -> str | None:
     # Check current working directory
     token = _load_token_from_env_file(Path.cwd() / ".env")
     if token:
@@ -48,7 +71,7 @@ def _find_env_file() -> str | None:
 
 
 def get_token() -> str:
-    token = os.environ.get("REACHDESK_API_TOKEN") or _find_env_file()
+    token = os.environ.get("REACHDESK_API_TOKEN") or _find_token()
     if token:
         return token
 

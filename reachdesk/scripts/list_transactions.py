@@ -2,7 +2,7 @@
 """List transactions from Reachdesk.
 
 Usage:
-    python list_transactions.py [--start-date YYYY-MM-DD] [--end-date YYYY-MM-DD] \\
+    python list_transactions.py [--project-dir DIR] [--start-date YYYY-MM-DD] [--end-date YYYY-MM-DD] \\
         [--types campaign_sends refund] [--states processed pending] \\
         [--currencies USD EUR] [--campaign-types gift_card bundle] \\
         [--page N]
@@ -10,11 +10,12 @@ Usage:
 
 import argparse
 import json
-from reachdesk import api_request
+from reachdesk import add_project_dir_arg, load_env, api_request
 
 
 def main():
     parser = argparse.ArgumentParser(description="List Reachdesk transactions")
+    add_project_dir_arg(parser)
     parser.add_argument("--start-date", help="Filter from date (YYYY-MM-DD)")
     parser.add_argument("--end-date", help="Filter until date (YYYY-MM-DD)")
     parser.add_argument("--page", type=int, default=1, help="Page number (default: 1)")
@@ -37,6 +38,7 @@ def main():
     parser.add_argument("--user-ids", nargs="+", type=int, help="Filter by user IDs")
 
     args = parser.parse_args()
+    load_env(args)
 
     params: dict = {"page": args.page}
     if args.start_date:
