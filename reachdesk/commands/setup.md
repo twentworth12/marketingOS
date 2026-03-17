@@ -16,12 +16,12 @@ description: Connect your Reachdesk account by saving your API token. Run this o
 cd scripts && python setup.py --token <token>
 ```
 
-4. Confirm the token is working by fetching their org:
+4. Confirm the token is working by fetching their contacts:
 
 ```bash
-cd scripts && python get_organization.py
+cd scripts && python list_contacts.py --per-page 1
 ```
 
-5. If successful, show the organisation name and tell the user they're ready to start sending gifts.
+5. If successful, tell the user they're connected and ready to start sending gifts.
 
 6. If it fails, tell the user to double-check their token and try again. Remind them the token is only shown once in the Reachdesk UI — if they didn't copy it, they'll need to create a new one.
