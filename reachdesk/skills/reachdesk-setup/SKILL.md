@@ -1,5 +1,5 @@
 ---
-name: setup
+name: reachdesk-setup
 description: Connect your Reachdesk account by saving your API token. Use when setting up the plugin for the first time, when your token has expired or been revoked, or when switching to a different Reachdesk account.
 argument-hint: "<your Reachdesk API token>"
 ---
