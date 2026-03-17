@@ -1,0 +1,10 @@
+{
+  "name": "Reachdesk",
+  "owner": "twentworth12",
+  "plugins": [
+    {
+      "name": "reachdesk",
+      "source": "./"
+    }
+  ]
+}
