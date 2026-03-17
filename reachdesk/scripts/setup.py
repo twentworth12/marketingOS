@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
-"""Save the Reachdesk API token to the plugin directory.
+"""Save the Reachdesk API token to a shared path that persists across plugin versions.
 
-setup.py lives at <plugin_root>/scripts/setup.py, so the token
-is always saved to <plugin_root>/reachdesk_token.json — the same
-location reachdesk.py looks for it.
+Directory layout in Cowork:
+  .../reachdesk-plugin/          <- _SHARED_ROOT (token lives here)
+  └── reachdesk/
+      └── <version>/             <- _PLUGIN_ROOT
+          └── scripts/
+              └── setup.py       <- __file__
+
+Token is saved to _SHARED_ROOT/reachdesk_token.json so it survives
+version updates.
 
 Usage:
     python setup.py --token <api_token>
@@ -13,9 +19,10 @@ import argparse
 import json
 from pathlib import Path
 
-# setup.py lives at <plugin_root>/scripts/setup.py
+# scripts/setup.py → scripts/ → <version>/ → reachdesk/ → reachdesk-plugin/
 _PLUGIN_ROOT = Path(__file__).resolve().parent.parent
-_TOKEN_PATH = _PLUGIN_ROOT / "reachdesk_token.json"
+_SHARED_ROOT = _PLUGIN_ROOT.parent.parent
+_TOKEN_PATH = _SHARED_ROOT / "reachdesk_token.json"
 
 
 def main():

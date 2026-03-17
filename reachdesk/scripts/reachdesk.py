@@ -1,6 +1,10 @@
 """Reachdesk API v2 client.
 
-Requires REACHDESK_API_TOKEN environment variable.
+Token lookup order:
+1. REACHDESK_API_TOKEN environment variable
+2. <reachdesk-plugin>/reachdesk_token.json  (shared, persists across versions)
+3. <version>/reachdesk_token.json           (fallback for older installs)
+
 Base URL: https://app.reachdesk.com/api/v2
 """
 
@@ -14,10 +18,11 @@ from pathlib import Path
 
 BASE_URL = "https://app.reachdesk.com/api/v2"
 
-# reachdesk.py lives at <plugin_root>/scripts/reachdesk.py
-# so plugin root is always two levels up from this file
+# scripts/reachdesk.py → scripts/ → <version>/ → reachdesk/ → reachdesk-plugin/
 _PLUGIN_ROOT = Path(__file__).resolve().parent.parent
-_TOKEN_PATH = _PLUGIN_ROOT / "reachdesk_token.json"
+_SHARED_ROOT = _PLUGIN_ROOT.parent.parent
+_SHARED_TOKEN_PATH = _SHARED_ROOT / "reachdesk_token.json"
+_LOCAL_TOKEN_PATH = _PLUGIN_ROOT / "reachdesk_token.json"
 
 
 def _load_token_from_file(path: Path) -> str | None:
@@ -32,14 +37,15 @@ def _load_token_from_file(path: Path) -> str | None:
 def get_token() -> str:
     token = (
         os.environ.get("REACHDESK_API_TOKEN")
-        or _load_token_from_file(_TOKEN_PATH)
+        or _load_token_from_file(_SHARED_TOKEN_PATH)
+        or _load_token_from_file(_LOCAL_TOKEN_PATH)
     )
     if token:
         return token
 
     print(
         f"Error: Reachdesk API token not found.\n"
-        f"Expected token at: {_TOKEN_PATH}\n"
+        f"Expected token at: {_SHARED_TOKEN_PATH}\n"
         f"Run the reachdesk-setup skill to connect your account.",
         file=sys.stderr,
     )
