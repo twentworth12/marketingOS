@@ -29,9 +29,11 @@ Identify the user's project directory (not `.local-plugins` or other system moun
 
 ### 3. Save the token
 
+Pipe the token via stdin so it doesn't appear in the process list or shell history:
+
 ```bash
 SCRIPTS_DIR=$(find /mnt -path "*reachdesk*/scripts/setup.py" 2>/dev/null | head -1 | xargs dirname)
-python "$SCRIPTS_DIR/setup.py" --token <token> --project-dir <PROJECT_DIR>
+echo "<token>" | python "$SCRIPTS_DIR/setup.py" --project-dir <PROJECT_DIR>
 ```
 
 ### 4. Verify it works

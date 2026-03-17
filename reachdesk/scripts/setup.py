@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """Save the Reachdesk API token to a .env file in the project folder.
 
-The project folder is the local folder attached to the Cowork project,
-which is mounted from the host machine and persists between sessions.
+The token is read from stdin to avoid exposing it in process lists
+or shell history.
 
 Usage:
-    python setup.py --token <api_token> --project-dir /path/to/project
+    echo "your_token" | python setup.py --project-dir /path/to/project
 """
 
 import argparse
+import sys
 from pathlib import Path
 
 ENV_FILE = ".env"
@@ -16,17 +17,20 @@ ENV_FILE = ".env"
 
 def main():
     parser = argparse.ArgumentParser(description="Save Reachdesk API token")
-    parser.add_argument("--token", required=True, help="Reachdesk API token")
     parser.add_argument("--project-dir", required=True, help="Path to the Cowork project folder")
     args = parser.parse_args()
 
+    token = sys.stdin.read().strip()
+    if not token:
+        print("Error: no token provided on stdin.", file=sys.stderr)
+        sys.exit(1)
+
     env_path = Path(args.project_dir) / ENV_FILE
-    env_var = f"REACHDESK_API_TOKEN={args.token}"
+    env_var = f"REACHDESK_API_TOKEN={token}"
 
     # Read existing .env or start fresh
     if env_path.exists():
         lines = env_path.read_text().splitlines()
-        # Replace existing token line if present
         new_lines = [l for l in lines if not l.startswith("REACHDESK_API_TOKEN=")]
         new_lines.append(env_var)
     else:
