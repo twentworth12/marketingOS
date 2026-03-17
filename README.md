@@ -25,7 +25,13 @@ This plugin connects Claude Cowork to the [Reachdesk](https://reachdesk.com) gif
 
 ### 1. Install the plugin
 
-Install this plugin in Claude Cowork via the **Customize** menu in the left sidebar.
+1. Open Claude Cowork and click **Customize** in the left sidebar
+2. Select **Add marketplace by URL**
+3. Enter the following URL and click **Sync**:
+   ```
+   https://github.com/twentworth12/reachdesk-plugin.git
+   ```
+4. Once synced, find **Reachdesk** in the marketplace and click **Install**
 
 ### 2. Connect your Reachdesk account
 
