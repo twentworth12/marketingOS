@@ -8,6 +8,16 @@ argument-hint: "<company name or contact name>"
 
 Search and browse the Reachdesk contacts list to help the user find the right people to send gifts to.
 
+## Before you start
+
+Find the user's project folder (the local folder attached to this Cowork project, typically under `/mnt/`). Check if it contains a `.env` file with `REACHDESK_API_TOKEN`. If the token is missing, ask the user to paste their Reachdesk API token and run the `reachdesk-setup` skill before continuing.
+
+All scripts must be run from the project folder so they can find the `.env` file:
+
+```bash
+cd <PROJECT_DIR>
+```
+
 ## Workflow
 
 ### 1. Get the search criteria

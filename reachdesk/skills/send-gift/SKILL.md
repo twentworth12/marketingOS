@@ -8,6 +8,16 @@ argument-hint: "<recipient name or email> [campaign context]"
 
 Walk the user through sending a Reachdesk gift — identifying the right recipient and campaign, confirming the send details, and triggering the delivery.
 
+## Before you start
+
+Find the user's project folder (the local folder attached to this Cowork project, typically under `/mnt/`). Check if it contains a `.env` file with `REACHDESK_API_TOKEN`. If the token is missing, ask the user to paste their Reachdesk API token and run the `reachdesk-setup` skill before continuing.
+
+All scripts must be run from the project folder so they can find the `.env` file:
+
+```bash
+cd <PROJECT_DIR>
+```
+
 ## Workflow
 
 ### 1. Gather send details

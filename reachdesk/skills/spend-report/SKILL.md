@@ -8,6 +8,16 @@ argument-hint: "<date range or period, e.g. Q1 2026>"
 
 Pull Reachdesk transaction data and produce a clear spend summary with breakdowns by campaign type, currency, team, and status.
 
+## Before you start
+
+Find the user's project folder (the local folder attached to this Cowork project, typically under `/mnt/`). Check if it contains a `.env` file with `REACHDESK_API_TOKEN`. If the token is missing, ask the user to paste their Reachdesk API token and run the `reachdesk-setup` skill before continuing.
+
+All scripts must be run from the project folder so they can find the `.env` file:
+
+```bash
+cd <PROJECT_DIR>
+```
+
 ## Workflow
 
 ### 1. Clarify the reporting period
