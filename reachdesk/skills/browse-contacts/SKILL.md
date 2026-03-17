@@ -1,6 +1,8 @@
+---
 name: browse-contacts
 description: Browse and search contacts in Reachdesk. Use when a marketer wants to find someone to send a gift to, when looking up contacts at a specific company, or when building a list of recipients for a gifting campaign.
 argument-hint: "<company name or contact name>"
+---
 
 ## Overview
 

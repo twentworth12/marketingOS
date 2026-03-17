@@ -1,6 +1,8 @@
+---
 name: spend-report
 description: Generate a gifting spend report from Reachdesk transactions. Use when a marketer wants to understand gifting costs over a period, when reporting on budget usage to a manager, when breaking down spend by campaign type or currency, or when reconciling gifting activity at end of quarter.
 argument-hint: "<date range or period, e.g. Q1 2026>"
+---
 
 ## Overview
 

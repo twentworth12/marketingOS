@@ -1,6 +1,8 @@
+---
 name: send-gift
 description: Send a gift to a contact by triggering a Reachdesk campaign. Use when a marketer wants to send a gift to a prospect or customer, when following up after a meeting or event, or when running an account-based gifting campaign.
 argument-hint: "<recipient name or email> [campaign context]"
+---
 
 ## Overview
 

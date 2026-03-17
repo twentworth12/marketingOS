@@ -1,6 +1,8 @@
+---
 name: gift-status
 description: Check the delivery status of recent gift sends in Reachdesk. Use when a marketer wants to know what's been sent recently, when following up on a specific send, when checking which gifts are pending or delivered, or when auditing sends for a campaign or time period.
 argument-hint: "<date range or contact name>"
+---
 
 ## Overview
 

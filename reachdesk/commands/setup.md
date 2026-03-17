@@ -1,5 +1,7 @@
+---
 name: setup
 description: Connect your Reachdesk account by saving your API token. Run this once before using any other Reachdesk skills.
+---
 
 ## Instructions
 
