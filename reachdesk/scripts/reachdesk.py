@@ -2,8 +2,8 @@
 
 Token lookup order:
 1. REACHDESK_API_TOKEN environment variable
-2. <reachdesk-plugin>/reachdesk_token.json  (shared, persists across versions)
-3. <version>/reachdesk_token.json           (fallback for older installs)
+2. .env file in the current working directory
+3. .env file in common Cowork project mount points
 
 Base URL: https://app.reachdesk.com/api/v2
 """
@@ -18,35 +18,43 @@ from pathlib import Path
 
 BASE_URL = "https://app.reachdesk.com/api/v2"
 
-# scripts/reachdesk.py → scripts/ → <version>/ → reachdesk/ → reachdesk-plugin/
-_PLUGIN_ROOT = Path(__file__).resolve().parent.parent
-_SHARED_ROOT = _PLUGIN_ROOT.parent.parent
-_SHARED_TOKEN_PATH = _SHARED_ROOT / "reachdesk_token.json"
-_LOCAL_TOKEN_PATH = _PLUGIN_ROOT / "reachdesk_token.json"
 
-
-def _load_token_from_file(path: Path) -> str | None:
+def _load_token_from_env_file(path: Path) -> str | None:
     if path.exists():
         try:
-            return json.loads(path.read_text()).get("api_token")
-        except (json.JSONDecodeError, OSError):
+            for line in path.read_text().splitlines():
+                line = line.strip()
+                if line.startswith("REACHDESK_API_TOKEN="):
+                    return line.split("=", 1)[1].strip().strip('"').strip("'")
+        except OSError:
             pass
     return None
 
 
+def _find_env_file() -> str | None:
+    # Check current working directory
+    token = _load_token_from_env_file(Path.cwd() / ".env")
+    if token:
+        return token
+
+    # Check common Cowork project mount points
+    for mount in Path("/mnt").iterdir() if Path("/mnt").exists() else []:
+        if mount.is_dir():
+            token = _load_token_from_env_file(mount / ".env")
+            if token:
+                return token
+
+    return None
+
+
 def get_token() -> str:
-    token = (
-        os.environ.get("REACHDESK_API_TOKEN")
-        or _load_token_from_file(_SHARED_TOKEN_PATH)
-        or _load_token_from_file(_LOCAL_TOKEN_PATH)
-    )
+    token = os.environ.get("REACHDESK_API_TOKEN") or _find_env_file()
     if token:
         return token
 
     print(
-        f"Error: Reachdesk API token not found.\n"
-        f"Expected token at: {_SHARED_TOKEN_PATH}\n"
-        f"Run the reachdesk-setup skill to connect your account.",
+        "Error: Reachdesk API token not found.\n"
+        "Run the reachdesk-setup skill to connect your account.",
         file=sys.stderr,
     )
     sys.exit(1)

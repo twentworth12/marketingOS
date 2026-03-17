@@ -24,7 +24,7 @@ Ask the user for the following if not already provided:
 If the user provides a company name but not a specific contact, search first:
 
 ```bash
-cd scripts && python list_contacts.py --account "<company name>"
+SCRIPTS_DIR=$(find /mnt -path "*reachdesk*/scripts/list_contacts.py" 2>/dev/null | head -1 | xargs dirname) && python "$SCRIPTS_DIR/list_contacts.py" --account "<company name>"
 ```
 
 Present matching contacts and let the user confirm which one to send to.
@@ -43,7 +43,7 @@ Ask the user to confirm before proceeding.
 ### 4. Trigger the send
 
 ```bash
-cd scripts && python send_gift.py \
+SCRIPTS_DIR=$(find /mnt -path "*reachdesk*/scripts/send_gift.py" 2>/dev/null | head -1 | xargs dirname) && python "$SCRIPTS_DIR/send_gift.py" \
   --campaign-id <id> \
   --sender <sender_email> \
   --first-name <first> \

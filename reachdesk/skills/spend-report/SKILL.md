@@ -21,7 +21,7 @@ Convert relative dates or quarters to YYYY-MM-DD format.
 ### 2. Fetch transactions
 
 ```bash
-cd scripts && python list_transactions.py \
+SCRIPTS_DIR=$(find /mnt -path "*reachdesk*/scripts/list_transactions.py" 2>/dev/null | head -1 | xargs dirname) && python "$SCRIPTS_DIR/list_transactions.py" \
   --start-date <YYYY-MM-DD> \
   --end-date <YYYY-MM-DD> \
   [--types campaign_sends] \

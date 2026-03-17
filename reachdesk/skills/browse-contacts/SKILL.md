@@ -20,13 +20,13 @@ Ask the user what they're looking for:
 ### 2. Fetch contacts
 
 ```bash
-cd scripts && python list_contacts.py --account "<company name>" --per-page 25
+SCRIPTS_DIR=$(find /mnt -path "*reachdesk*/scripts/list_contacts.py" 2>/dev/null | head -1 | xargs dirname) && python "$SCRIPTS_DIR/list_contacts.py" --account "<company name>" --per-page 25
 ```
 
 Or for all contacts:
 
 ```bash
-cd scripts && python list_contacts.py --per-page 25 --page 1
+SCRIPTS_DIR=$(find /mnt -path "*reachdesk*/scripts/list_contacts.py" 2>/dev/null | head -1 | xargs dirname) && python "$SCRIPTS_DIR/list_contacts.py" --per-page 25 --page 1
 ```
 
 ### 3. Present results

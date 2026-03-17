@@ -21,7 +21,7 @@ Convert relative dates to YYYY-MM-DD format before running the script.
 ### 2. Fetch sends
 
 ```bash
-cd scripts && python list_sends.py \
+SCRIPTS_DIR=$(find /mnt -path "*reachdesk*/scripts/list_sends.py" 2>/dev/null | head -1 | xargs dirname) && python "$SCRIPTS_DIR/list_sends.py" \
   --start-date <YYYY-MM-DD> \
   --end-date <YYYY-MM-DD> \
   --per-page 50

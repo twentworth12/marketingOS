@@ -1,40 +1,41 @@
 #!/usr/bin/env python3
-"""Save the Reachdesk API token to a shared path that persists across plugin versions.
+"""Save the Reachdesk API token to a .env file in the project folder.
 
-Directory layout in Cowork:
-  .../reachdesk-plugin/          <- _SHARED_ROOT (token lives here)
-  └── reachdesk/
-      └── <version>/             <- _PLUGIN_ROOT
-          └── scripts/
-              └── setup.py       <- __file__
-
-Token is saved to _SHARED_ROOT/reachdesk_token.json so it survives
-version updates.
+The project folder is the local folder attached to the Cowork project,
+which is mounted from the host machine and persists between sessions.
 
 Usage:
-    python setup.py --token <api_token>
+    python setup.py --token <api_token> --project-dir /path/to/project
 """
 
 import argparse
-import json
 from pathlib import Path
 
-# scripts/setup.py → scripts/ → <version>/ → reachdesk/ → reachdesk-plugin/
-_PLUGIN_ROOT = Path(__file__).resolve().parent.parent
-_SHARED_ROOT = _PLUGIN_ROOT.parent.parent
-_TOKEN_PATH = _SHARED_ROOT / "reachdesk_token.json"
+ENV_FILE = ".env"
 
 
 def main():
     parser = argparse.ArgumentParser(description="Save Reachdesk API token")
     parser.add_argument("--token", required=True, help="Reachdesk API token")
+    parser.add_argument("--project-dir", required=True, help="Path to the Cowork project folder")
     args = parser.parse_args()
 
-    _TOKEN_PATH.parent.mkdir(parents=True, exist_ok=True)
-    _TOKEN_PATH.write_text(json.dumps({"api_token": args.token}, indent=2))
-    _TOKEN_PATH.chmod(0o600)
+    env_path = Path(args.project_dir) / ENV_FILE
+    env_var = f"REACHDESK_API_TOKEN={args.token}"
 
-    print(f"Token saved to {_TOKEN_PATH}")
+    # Read existing .env or start fresh
+    if env_path.exists():
+        lines = env_path.read_text().splitlines()
+        # Replace existing token line if present
+        new_lines = [l for l in lines if not l.startswith("REACHDESK_API_TOKEN=")]
+        new_lines.append(env_var)
+    else:
+        new_lines = [env_var]
+
+    env_path.write_text("\n".join(new_lines) + "\n")
+    env_path.chmod(0o600)
+
+    print(f"Token saved to {env_path}")
     print("Done.")
 
 
