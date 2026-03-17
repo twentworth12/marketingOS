@@ -21,27 +21,19 @@ Tell the user:
 
 Ask the user to paste their API token.
 
-### 3. Determine the plugin root
-
-Find the plugin root by locating this SKILL.md file and going up two directories:
+### 3. Save the token
 
 ```bash
-PLUGIN_ROOT=$(cd "$(dirname "$(find ~ -path '*/reachdesk/skills/reachdesk-setup/SKILL.md' 2>/dev/null | head -1)")/../.." && pwd) && echo "Plugin root: $PLUGIN_ROOT"
+cd scripts && python setup.py --token <token>
 ```
 
-### 4. Save the token
+### 4. Verify it works
 
 ```bash
-CLAUDE_PLUGIN_ROOT="$PLUGIN_ROOT" python "$PLUGIN_ROOT/scripts/setup.py" --token <token>
+cd scripts && python list_contacts.py --per-page 1
 ```
 
-### 5. Verify it works
-
-```bash
-CLAUDE_PLUGIN_ROOT="$PLUGIN_ROOT" python "$PLUGIN_ROOT/scripts/list_contacts.py" --per-page 1
-```
-
-### 6. Confirm
+### 5. Confirm
 
 If successful, tell the user they're connected and ready to start sending gifts.
 

@@ -14,12 +14,10 @@ from pathlib import Path
 
 BASE_URL = "https://app.reachdesk.com/api/v2"
 
-
-def _get_token_path() -> Path:
-    plugin_root = os.environ.get("CLAUDE_PLUGIN_ROOT")
-    if plugin_root:
-        return Path(plugin_root) / "reachdesk_token.json"
-    return Path.home() / ".config" / "reachdesk" / "config.json"
+# reachdesk.py lives at <plugin_root>/scripts/reachdesk.py
+# so plugin root is always two levels up from this file
+_PLUGIN_ROOT = Path(__file__).resolve().parent.parent
+_TOKEN_PATH = _PLUGIN_ROOT / "reachdesk_token.json"
 
 
 def _load_token_from_file(path: Path) -> str | None:
@@ -34,14 +32,15 @@ def _load_token_from_file(path: Path) -> str | None:
 def get_token() -> str:
     token = (
         os.environ.get("REACHDESK_API_TOKEN")
-        or _load_token_from_file(_get_token_path())
+        or _load_token_from_file(_TOKEN_PATH)
     )
     if token:
         return token
 
     print(
-        "Error: Reachdesk API token not found.\n"
-        "Run the reachdesk-setup skill to connect your account.",
+        f"Error: Reachdesk API token not found.\n"
+        f"Expected token at: {_TOKEN_PATH}\n"
+        f"Run the reachdesk-setup skill to connect your account.",
         file=sys.stderr,
     )
     sys.exit(1)
