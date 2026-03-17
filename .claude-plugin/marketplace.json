@@ -1,10 +1,13 @@
 {
-  "name": "Reachdesk",
-  "owner": "twentworth12",
+  "name": "reachdesk-plugin",
+  "owner": {
+    "name": "Reachdesk"
+  },
   "plugins": [
     {
       "name": "reachdesk",
-      "source": "./"
+      "source": "./",
+      "description": "Send gifts, track deliveries, and manage gifting campaigns through Reachdesk. Browse contacts, trigger sends, and monitor spend across your team."
     }
   ]
 }
