@@ -15,11 +15,9 @@ This plugin connects Claude Cowork to the [Reachdesk](https://reachdesk.com) gif
 | `browse-contacts` | Search and browse contacts in Reachdesk by company or name |
 | `spend-report` | Generate a gifting spend report with breakdowns by campaign type, currency, and team |
 
-### Commands
+### Setup
 
-| Command | What it does |
-|---------|-------------|
-| `/reachdesk:setup` | Connect your Reachdesk account by saving your API token |
+Before using any other skills, run the `setup` skill to connect your Reachdesk account.
 
 ## Getting started
 
@@ -35,10 +33,10 @@ This plugin connects Claude Cowork to the [Reachdesk](https://reachdesk.com) gif
 
 ### 2. Connect your Reachdesk account
 
-Run the setup command in Cowork:
+Run the setup skill in Cowork:
 
 ```
-/reachdesk:setup
+/setup
 ```
 
 Claude will walk you through generating an API token in Reachdesk (Settings → API Tokens) and saving it securely to your machine.
