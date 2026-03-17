@@ -14,9 +14,12 @@ from pathlib import Path
 
 BASE_URL = "https://app.reachdesk.com/api/v2"
 
-# Token lookup order: env var → ~/.claude/reachdesk.json → ~/.config/reachdesk/config.json
-CLAUDE_DIR_PATH = Path.home() / ".claude" / "reachdesk.json"
-CONFIG_PATH = Path.home() / ".config" / "reachdesk" / "config.json"
+
+def _get_token_path() -> Path:
+    plugin_root = os.environ.get("CLAUDE_PLUGIN_ROOT")
+    if plugin_root:
+        return Path(plugin_root) / "reachdesk_token.json"
+    return Path.home() / ".config" / "reachdesk" / "config.json"
 
 
 def _load_token_from_file(path: Path) -> str | None:
@@ -31,8 +34,7 @@ def _load_token_from_file(path: Path) -> str | None:
 def get_token() -> str:
     token = (
         os.environ.get("REACHDESK_API_TOKEN")
-        or _load_token_from_file(CLAUDE_DIR_PATH)
-        or _load_token_from_file(CONFIG_PATH)
+        or _load_token_from_file(_get_token_path())
     )
     if token:
         return token
