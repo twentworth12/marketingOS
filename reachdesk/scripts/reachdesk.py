@@ -13,28 +13,33 @@ import urllib.parse
 from pathlib import Path
 
 BASE_URL = "https://app.reachdesk.com/api/v2"
+
+# Token lookup order: env var → ~/.claude/reachdesk.json → ~/.config/reachdesk/config.json
+CLAUDE_DIR_PATH = Path.home() / ".claude" / "reachdesk.json"
 CONFIG_PATH = Path.home() / ".config" / "reachdesk" / "config.json"
 
 
+def _load_token_from_file(path: Path) -> str | None:
+    if path.exists():
+        try:
+            return json.loads(path.read_text()).get("api_token")
+        except (json.JSONDecodeError, OSError):
+            pass
+    return None
+
+
 def get_token() -> str:
-    # Prefer environment variable (e.g. for CI or advanced users)
-    token = os.environ.get("REACHDESK_API_TOKEN")
+    token = (
+        os.environ.get("REACHDESK_API_TOKEN")
+        or _load_token_from_file(CLAUDE_DIR_PATH)
+        or _load_token_from_file(CONFIG_PATH)
+    )
     if token:
         return token
 
-    # Fall back to config file written by setup.py
-    if CONFIG_PATH.exists():
-        try:
-            config = json.loads(CONFIG_PATH.read_text())
-            token = config.get("api_token")
-            if token:
-                return token
-        except (json.JSONDecodeError, OSError):
-            pass
-
     print(
         "Error: Reachdesk API token not found.\n"
-        "Run /reachdesk:setup to connect your account.",
+        "Run the reachdesk-setup skill to connect your account.",
         file=sys.stderr,
     )
     sys.exit(1)
