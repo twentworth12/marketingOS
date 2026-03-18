@@ -1,7 +1,7 @@
 {
   "name": "linkedin-ads-manager",
-  "version": "1.0.0",
-  "description": "Create, manage, and analyze LinkedIn ad campaigns. Set up targeting, manage budgets, and track performance metrics across your LinkedIn advertising.",
+  "version": "0.2.4",
+  "description": "Programmatic LinkedIn ABM campaign management — clone campaigns, analyze targeting, update budgets, batch pause/resume, audit spend, and search URNs via a Python CLI.",
   "author": {
     "name": "Tom Wentworth",
     "url": "https://incident.io"
