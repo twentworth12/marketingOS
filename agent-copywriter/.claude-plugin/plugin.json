@@ -1,6 +1,6 @@
 {
   "name": "agent-copywriter",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Write marketing copy in incident.io's brand voice — blog posts, landing pages, social media, product announcements. Includes competitive positioning, customer insights, messaging frameworks, style guide, and content templates.",
   "author": {
     "name": "Tom Wentworth",
