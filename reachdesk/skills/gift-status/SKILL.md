@@ -22,6 +22,17 @@ echo "ENV_FILE=$ENV_FILE SCRIPTS_DIR=$SCRIPTS_DIR"
 
 **SECURITY: Never set REACHDESK_API_TOKEN inline in a bash command. Always load credentials by sourcing the .env file as shown below. The raw token value must never appear in any command visible in the chat transcript.**
 
+## Choosing the right script
+
+Pick the script based on what the user is asking:
+
+| Question type | Script | Why |
+|---------------|--------|-----|
+| Recipient status, delivery tracking, pending/failed sends | `list_sends.py` | Returns recipient details, send status, delivery info |
+| Who sent gifts, sender activity, user/team usage, BDR frequency | `list_transactions.py --types campaign_sends` | Has `created_by.name`, `created_by.email`, and `send.team_name` fields that `list_sends.py` does not |
+
+**When the user asks about "most active users", "who is sending", "BDR usage", "sender breakdown", or any question involving sender identity — go straight to `list_transactions.py --types campaign_sends`. Skip `list_sends.py` entirely.**
+
 ## Workflow
 
 ### 1. Determine the scope
@@ -32,7 +43,9 @@ Ask the user what they want to check:
 
 Convert relative dates to YYYY-MM-DD format before running the script.
 
-### 2. Fetch sends
+### 2. Fetch data
+
+**For delivery status questions** — use `list_sends.py`:
 
 ```bash
 (set -a && source "$ENV_FILE" && set +a && python "$SCRIPTS_DIR/list_sends.py" \
@@ -41,7 +54,16 @@ Convert relative dates to YYYY-MM-DD format before running the script.
   --per-page 50)
 ```
 
-Paginate if `total_pages > 1`.
+**For sender/user activity questions** — use `list_transactions.py`:
+
+```bash
+(set -a && source "$ENV_FILE" && set +a && python "$SCRIPTS_DIR/list_transactions.py" \
+  --types campaign_sends \
+  --start-date <YYYY-MM-DD> \
+  --end-date <YYYY-MM-DD>)
+```
+
+Pagination info is at `data.pagination.total_pages` in the response (not at the top level). Paginate with `--page N` if `total_pages > 1`.
 
 ### 3. Summarise the results
 
@@ -70,3 +92,5 @@ Offer to help the marketer follow up or resend where relevant.
 - Default to the last 30 days if no date range is specified
 - Use `--per-page 50` to reduce pagination for typical workloads
 - Sends are returned in reverse chronological order
+- Pagination is at `data.pagination.total_pages`, not at the top level of the JSON response
+- `list_transactions.py` with `--types campaign_sends` exposes `created_by.name`, `created_by.email`, and `send.team_name` — use it for any sender-related analysis
