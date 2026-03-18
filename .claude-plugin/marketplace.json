@@ -1,13 +1,19 @@
 {
-  "name": "reachdesk-plugin",
+  "name": "marketingOS",
   "owner": {
-    "name": "Reachdesk"
+    "name": "Tom Wentworth",
+    "url": "https://incident.io"
   },
   "plugins": [
     {
       "name": "reachdesk",
       "source": "./reachdesk",
       "description": "Send gifts, track deliveries, and manage gifting campaigns through Reachdesk. Browse contacts, trigger sends, and monitor spend across your team."
+    },
+    {
+      "name": "linkedin-ads-manager",
+      "source": "./linkedin-ads-manager",
+      "description": "Create, manage, and analyze LinkedIn ad campaigns. Set up targeting, manage budgets, and track performance metrics across your LinkedIn advertising."
     }
   ]
 }

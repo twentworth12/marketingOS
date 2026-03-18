@@ -1,0 +1,9 @@
+{
+  "name": "linkedin-ads-manager",
+  "version": "1.0.0",
+  "description": "Create, manage, and analyze LinkedIn ad campaigns. Set up targeting, manage budgets, and track performance metrics across your LinkedIn advertising.",
+  "author": {
+    "name": "Tom Wentworth",
+    "url": "https://incident.io"
+  }
+}
