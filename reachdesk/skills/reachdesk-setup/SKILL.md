@@ -8,18 +8,13 @@ argument-hint: "<your Reachdesk API token>"
 
 Save a Reachdesk API token so all Reachdesk skills can authenticate. The token is stored in a `.env` file in the local folder attached to this Cowork project, so it persists between sessions.
 
+**SECURITY: Never set REACHDESK_API_TOKEN inline in a bash command. The raw token value must never appear in any command visible in the chat transcript.**
+
 ## Workflow
 
-### 1. Ask for the token
+### 1. Find the project folder
 
-Always ask the user to paste their Reachdesk API token. If they don't have one yet, tell them:
-- Log into Reachdesk at https://app.reachdesk.com
-- Go to **Settings → API Tokens**
-- Click **Create Token**, give it a name, and copy the token — it's only shown once
-
-### 2. Find the project folder
-
-Find the local folder attached to this Cowork project. List directories under `/mnt/`:
+Identify the user's project directory. List available mounts or use the known workspace path:
 
 ```bash
 ls /mnt/
@@ -27,22 +22,40 @@ ls /mnt/
 
 Identify the user's project directory (not `.local-plugins` or other system mounts). Save this path as `PROJECT_DIR`.
 
-### 3. Save the token
+### 2. Check for an existing token
 
-Pipe the token via stdin so it doesn't appear in the process list or shell history:
-
-```bash
-SCRIPTS_DIR=$(find /mnt -path "*reachdesk*/scripts/setup.py" 2>/dev/null | head -1 | xargs dirname)
-echo "<token>" | python "$SCRIPTS_DIR/setup.py" --project-dir <PROJECT_DIR>
-```
-
-### 4. Verify it works
+Before asking the user for anything, check if a token already exists:
 
 ```bash
-(set -a && source <PROJECT_DIR>/.env && set +a && python "$SCRIPTS_DIR/list_contacts.py" --per-page 1)
+grep -s "REACHDESK_API_TOKEN=" "$PROJECT_DIR/.env"
 ```
 
-### 5. Confirm
+If `REACHDESK_API_TOKEN` is present and non-empty, **skip straight to step 5 (Verify)** — do not ask the user for a token.
+
+### 3. Ask for the token
+
+Only if the token is missing or empty. Ask the user to paste their Reachdesk API token. If they don't have one yet, tell them:
+- Log into Reachdesk at https://app.reachdesk.com
+- Go to **Settings → API Tokens**
+- Click **Create Token**, give it a name, and copy the token — it's only shown once
+
+### 4. Save the token
+
+Find the setup script relative to the project directory, then pipe the token via stdin:
+
+```bash
+SCRIPTS_DIR=$(find "$PROJECT_DIR" -path "*reachdesk*/scripts/setup.py" 2>/dev/null | head -1 | xargs dirname)
+echo "<token>" | python "$SCRIPTS_DIR/setup.py" --project-dir "$PROJECT_DIR"
+```
+
+### 5. Verify it works
+
+```bash
+SCRIPTS_DIR=$(find "$PROJECT_DIR" -path "*reachdesk*/scripts/list_contacts.py" 2>/dev/null | head -1 | xargs dirname)
+(set -a && source "$PROJECT_DIR/.env" && set +a && python "$SCRIPTS_DIR/list_contacts.py" --per-page 1)
+```
+
+### 6. Confirm
 
 If successful, tell the user they're connected and ready to start sending gifts.
 
