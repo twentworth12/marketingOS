@@ -24,6 +24,11 @@
       "name": "agent-copywriter",
       "source": "./agent-copywriter",
       "description": "Write marketing copy in incident.io's brand voice — blog posts, landing pages, social media, product announcements. Includes competitive positioning, customer insights, messaging frameworks, style guide, and content templates."
+    },
+    {
+      "name": "agent-case-study-writer",
+      "source": "./agent-case-study-writer",
+      "description": "Write customer case studies in incident.io's proven format — problem/solution/results with real quotes, metrics, and operational detail. Includes 25 reference case studies from Netflix, Etsy, Intercom, Skyscanner, and more."
     }
   ]
 }

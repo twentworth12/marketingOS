@@ -1,0 +1,9 @@
+{
+  "name": "agent-case-study-writer",
+  "version": "1.0.0",
+  "description": "Write customer case studies in incident.io's proven format — problem/solution/results with real quotes, metrics, and operational detail. Includes 25 reference case studies from Netflix, Etsy, Intercom, Skyscanner, and more.",
+  "author": {
+    "name": "Tom Wentworth",
+    "url": "https://incident.io"
+  }
+}
