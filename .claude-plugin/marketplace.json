@@ -19,6 +19,11 @@
       "name": "aeo-content-optimizer",
       "source": "./aeo-content-optimizer",
       "description": "Write blog posts and articles optimized for AI search engines (ChatGPT, Perplexity, Gemini, Google AI Overviews). Structures content for maximum citation likelihood, share of voice, and visibility in LLM responses."
+    },
+    {
+      "name": "agent-copywriter",
+      "source": "./agent-copywriter",
+      "description": "Write marketing copy in incident.io's brand voice — blog posts, landing pages, social media, product announcements. Includes competitive positioning, customer insights, messaging frameworks, style guide, and content templates."
     }
   ]
 }
