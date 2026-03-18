@@ -1,0 +1,9 @@
+{
+  "name": "aeo-content-optimizer",
+  "description": "Write blog posts and articles optimized for AI search engines (ChatGPT, Perplexity, Gemini, Google AI Overviews). Structures content for maximum citation likelihood, share of voice, and visibility in LLM responses.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Tom Wentworth",
+    "url": "https://incident.io"
+  }
+}

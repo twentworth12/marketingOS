@@ -14,6 +14,11 @@
       "name": "linkedin-ads-manager",
       "source": "./linkedin-ads-manager",
       "description": "Programmatic LinkedIn ABM campaign management — clone campaigns, analyze targeting, update budgets, batch pause/resume, audit spend, and search URNs via a Python CLI."
+    },
+    {
+      "name": "aeo-content-optimizer",
+      "source": "./aeo-content-optimizer",
+      "description": "Write blog posts and articles optimized for AI search engines (ChatGPT, Perplexity, Gemini, Google AI Overviews). Structures content for maximum citation likelihood, share of voice, and visibility in LLM responses."
     }
   ]
 }
