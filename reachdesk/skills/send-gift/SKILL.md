@@ -12,11 +12,15 @@ Walk the user through sending a Reachdesk gift — identifying the right recipie
 
 Find the user's project folder (the local folder attached to this Cowork project, typically under `/mnt/`). Check if it contains a `.env` file with `REACHDESK_API_TOKEN`. If the token is missing, ask the user to paste their Reachdesk API token and run the `reachdesk-setup` skill before continuing.
 
-All scripts must be run from the project folder so they can find the `.env` file:
+Find the scripts directory:
 
 ```bash
-cd <PROJECT_DIR>
+ENV_FILE=$(find /mnt -name ".env" -not -path "*/.local-plugins/*" 2>/dev/null | head -1)
+SCRIPTS_DIR=$(find /mnt -path "*reachdesk*/scripts/send_gift.py" 2>/dev/null | head -1 | xargs dirname)
+echo "ENV_FILE=$ENV_FILE SCRIPTS_DIR=$SCRIPTS_DIR"
 ```
+
+**SECURITY: Never set REACHDESK_API_TOKEN inline in a bash command. Always load credentials by sourcing the .env file as shown below. The raw token value must never appear in any command visible in the chat transcript.**
 
 ## Workflow
 
@@ -34,7 +38,7 @@ Ask the user for the following if not already provided:
 If the user provides a company name but not a specific contact, search first:
 
 ```bash
-SCRIPTS_DIR=$(find /mnt -path "*reachdesk*/scripts/list_contacts.py" 2>/dev/null | head -1 | xargs dirname) && python "$SCRIPTS_DIR/list_contacts.py" --account "<company name>"
+(set -a && source "$ENV_FILE" && set +a && python "$SCRIPTS_DIR/list_contacts.py" --account "<company name>")
 ```
 
 Present matching contacts and let the user confirm which one to send to.
@@ -53,7 +57,7 @@ Ask the user to confirm before proceeding.
 ### 4. Trigger the send
 
 ```bash
-SCRIPTS_DIR=$(find /mnt -path "*reachdesk*/scripts/send_gift.py" 2>/dev/null | head -1 | xargs dirname) && python "$SCRIPTS_DIR/send_gift.py" \
+(set -a && source "$ENV_FILE" && set +a && python "$SCRIPTS_DIR/send_gift.py" \
   --campaign-id <id> \
   --sender <sender_email> \
   --first-name <first> \
@@ -62,7 +66,7 @@ SCRIPTS_DIR=$(find /mnt -path "*reachdesk*/scripts/send_gift.py" 2>/dev/null | h
   [--company "<company>"] \
   [--currency <currency>] \
   [--note "<note>"] \
-  [--approved auto]
+  [--approved auto])
 ```
 
 ### 5. Report the result

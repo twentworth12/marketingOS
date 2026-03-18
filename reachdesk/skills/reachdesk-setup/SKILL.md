@@ -39,7 +39,7 @@ echo "<token>" | python "$SCRIPTS_DIR/setup.py" --project-dir <PROJECT_DIR>
 ### 4. Verify it works
 
 ```bash
-cd <PROJECT_DIR> && python "$SCRIPTS_DIR/list_contacts.py" --per-page 1
+(set -a && source <PROJECT_DIR>/.env && set +a && python "$SCRIPTS_DIR/list_contacts.py" --per-page 1)
 ```
 
 ### 5. Confirm

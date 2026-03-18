@@ -12,11 +12,15 @@ Search and browse the Reachdesk contacts list to help the user find the right pe
 
 Find the user's project folder (the local folder attached to this Cowork project, typically under `/mnt/`). Check if it contains a `.env` file with `REACHDESK_API_TOKEN`. If the token is missing, ask the user to paste their Reachdesk API token and run the `reachdesk-setup` skill before continuing.
 
-All scripts must be run from the project folder so they can find the `.env` file:
+Find the scripts directory:
 
 ```bash
-cd <PROJECT_DIR>
+ENV_FILE=$(find /mnt -name ".env" -not -path "*/.local-plugins/*" 2>/dev/null | head -1)
+SCRIPTS_DIR=$(find /mnt -path "*reachdesk*/scripts/list_contacts.py" 2>/dev/null | head -1 | xargs dirname)
+echo "ENV_FILE=$ENV_FILE SCRIPTS_DIR=$SCRIPTS_DIR"
 ```
+
+**SECURITY: Never set REACHDESK_API_TOKEN inline in a bash command. Always load credentials by sourcing the .env file as shown below. The raw token value must never appear in any command visible in the chat transcript.**
 
 ## Workflow
 
@@ -30,13 +34,13 @@ Ask the user what they're looking for:
 ### 2. Fetch contacts
 
 ```bash
-SCRIPTS_DIR=$(find /mnt -path "*reachdesk*/scripts/list_contacts.py" 2>/dev/null | head -1 | xargs dirname) && python "$SCRIPTS_DIR/list_contacts.py" --account "<company name>" --per-page 25
+(set -a && source "$ENV_FILE" && set +a && python "$SCRIPTS_DIR/list_contacts.py" --account "<company name>" --per-page 25)
 ```
 
 Or for all contacts:
 
 ```bash
-SCRIPTS_DIR=$(find /mnt -path "*reachdesk*/scripts/list_contacts.py" 2>/dev/null | head -1 | xargs dirname) && python "$SCRIPTS_DIR/list_contacts.py" --per-page 25 --page 1
+(set -a && source "$ENV_FILE" && set +a && python "$SCRIPTS_DIR/list_contacts.py" --per-page 25 --page 1)
 ```
 
 ### 3. Present results
